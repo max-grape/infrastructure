@@ -3,7 +3,7 @@ name: Prometheus (development)
 on: workflow_dispatch
 
 env:
-  nginx: prom/prometheus:v2.40.5
+  prometheus: prom/prometheus:v2.40.5
   registry: ghcr.io
   image: ghcr.io/${{ github.repository }}/prometheus:${{ github.sha }}
 
