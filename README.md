@@ -8,4 +8,4 @@ This repository contains infrastructural services for my projects which run some
 
 ![redis-commander](https://github.com/max-grape/infrastructure/actions/workflows/redis-commander.yml/badge.svg)
 
-![redis](https://github.com/max-grape/infrastructure/actions/workflows/nginx.yml/redis.svg)
+![redis](https://github.com/max-grape/infrastructure/actions/workflows/redis.yml/badge.svg)

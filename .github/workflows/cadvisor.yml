@@ -1,3 +1,5 @@
+name: Deployment
+
 push:
     branches:
       - main
@@ -10,6 +12,7 @@ jobs:
   deployment:
     name: deployment dev
     runs-on: ubuntu-latest
+    environment: development
     steps:
       - name: repo checkout
         uses: actions/checkout@v3
