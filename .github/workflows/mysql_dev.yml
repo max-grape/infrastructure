@@ -63,6 +63,7 @@ jobs:
       - name: deploy to swarm
         run: |
           IMAGE=${{ env.image }} \
+          MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
           docker -H ${{ secrets.HOST }} \
             --tls \
             --tlscacert ca.pem \

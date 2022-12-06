@@ -9,6 +9,7 @@ services:
     image: ${IMAGE}
     environment:
       - TZ=Europe/Moscow
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
     deploy:
