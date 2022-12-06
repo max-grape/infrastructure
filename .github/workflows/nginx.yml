@@ -1,0 +1,75 @@
+push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  nginx: nginx:1.23.2-alpine
+  registry: ghcr.io
+  image: ghcr.io/${{ github.repository }}/nginx:${{ github.sha }}
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: repo checkout
+      uses: actions/checkout@v3
+
+    - name: buildx installation
+      uses: docker/setup-buildx-action@v2
+
+    - name: docker login
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.registry }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: docker build
+      uses: docker/build-push-action@v3
+      with:
+        context: ./nginx
+        build-args: |
+          IMAGE_NGINX=${{ env.nginx }}
+        tags: ${{ env.image }}
+        push: true
+
+  deployment:
+    name: deployment dev
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v3
+
+      - name: buildx installation
+        uses: docker/setup-buildx-action@v2
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT_DEPLOYMENT_READ_PACKAGES }}
+
+      - name: tls secrets to files
+        run: |
+          echo '${{ secrets.TLS_CA }}' > ca.pem
+          echo '${{ secrets.TLS_CERT }}' > cert.pem
+          echo '${{ secrets.TLS_KEY }}' > key.pem
+
+      - name: deploy to swarm
+        run: |
+          IMAGE=${{ env.image }} \
+          docker -H ${{ secrets.HOST_DEV }} \
+            --tls \
+            --tlscacert ca.pem \
+            --tlscert cert.pem \
+            --tlskey key.pem \
+            stack deploy \
+              --with-registry-auth \
+              -c nginx/stack.yml nginx

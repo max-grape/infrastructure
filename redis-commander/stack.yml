@@ -1,0 +1,25 @@
+version: '3.4'
+
+networks:
+  nginx_default:
+    external: true
+  redis_default:
+    external: true
+
+services:
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    networks:
+      - nginx_default
+      - redis_default
+    environment:
+      - REDIS_HOSTS=redis
+      - REDIS_PORT=6379
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.name == mg1

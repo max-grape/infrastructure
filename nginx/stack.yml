@@ -1,0 +1,36 @@
+version: '3.4'
+
+volumes:
+  letsencrypt:
+    name: letsencrypt
+
+services:
+  nginx:
+    image: ${IMAGE}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.name == mg1
+
+  renew:
+    image: certbot/certbot:v2.0.0
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.name == mg1

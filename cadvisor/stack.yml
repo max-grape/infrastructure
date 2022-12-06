@@ -1,0 +1,25 @@
+version: '3.4'
+
+networks:
+  nginx_default:
+    external: true
+
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
+    networks:
+      - nginx_default
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.name == mg1
