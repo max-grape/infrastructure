@@ -1,0 +1,73 @@
+name: MySQL (development)
+
+on: workflow_dispatch
+
+env:
+  mysql: mysql:8.0.31
+  registry: ghcr.io
+  image: ghcr.io/${{ github.repository }}/mysql:${{ github.sha }}
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+    - name: repo checkout
+      uses: actions/checkout@v3
+
+    - name: buildx installation
+      uses: docker/setup-buildx-action@v2
+
+    - name: docker login
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.registry }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: docker build
+      uses: docker/build-push-action@v3
+      with:
+        context: ./mysql
+        build-args: |
+          IMAGE_MYSQL=${{ env.mysql }}
+        tags: ${{ env.image }}
+        push: true
+
+  deployment:
+    name: deployment
+    needs: build
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v3
+
+      - name: buildx installation
+        uses: docker/setup-buildx-action@v2
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT_DEPLOYMENT_READ_PACKAGES }}
+
+      - name: tls secrets to files
+        run: |
+          echo '${{ secrets.TLS_CA }}' > ca.pem
+          echo '${{ secrets.TLS_CERT }}' > cert.pem
+          echo '${{ secrets.TLS_KEY }}' > key.pem
+
+      - name: deploy to swarm
+        run: |
+          IMAGE=${{ env.image }} \
+          docker -H ${{ secrets.HOST }} \
+            --tls \
+            --tlscacert ca.pem \
+            --tlscert cert.pem \
+            --tlskey key.pem \
+            stack deploy \
+              --with-registry-auth \
+              -c mysql/stack.yml mysql
