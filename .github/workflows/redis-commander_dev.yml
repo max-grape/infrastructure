@@ -1,4 +1,4 @@
-name: Redis commander deployment (development)
+name: Redis Commander (development)
 
 on: workflow_dispatch
 

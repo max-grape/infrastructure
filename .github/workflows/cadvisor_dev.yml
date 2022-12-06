@@ -1,4 +1,4 @@
-name: cAdvisor deployment (development)
+name: cAdvisor (development)
 
 on: workflow_dispatch
 
