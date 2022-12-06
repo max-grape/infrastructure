@@ -10,6 +10,7 @@ services:
   redis-commander:
     image: rediscommander/redis-commander:latest
     networks:
+      - default
       - nginx_default
       - redis_default
     environment:

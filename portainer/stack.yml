@@ -1,7 +1,7 @@
 version: '3.4'
 
 networks:
-  openresty_default:
+  nginx_default:
     external: true
 
 volumes:
@@ -12,7 +12,8 @@ services:
   portainer:
     image: portainer/portainer-ce:2.16.2-alpine
     networks:
-      - openresty_default
+      - default
+      - nginx_default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer:/data
