@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   deployment:
-    name: deployment dev
+    name: deployment
     runs-on: ubuntu-latest
     environment: development
     steps:
@@ -22,7 +22,7 @@ jobs:
 
       - name: deploy to swarm
         run: |
-          docker -H ${{ secrets.HOST_DEV }} \
+          docker -H ${{ secrets.HOST }} \
             --tls \
             --tlscacert ca.pem \
             --tlscert cert.pem \

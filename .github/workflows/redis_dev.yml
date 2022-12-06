@@ -22,7 +22,7 @@ jobs:
 
       - name: deploy to swarm
         run: |
-          docker -H ${{ secrets.HOST_DEV }} \
+          docker -H ${{ secrets.HOST }} \
             --tls \
             --tlscacert ca.pem \
             --tlscert cert.pem \

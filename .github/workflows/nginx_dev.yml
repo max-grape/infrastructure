@@ -36,7 +36,7 @@ jobs:
         push: true
 
   deployment:
-    name: deployment dev
+    name: deployment
     needs: build
     runs-on: ubuntu-latest
     environment: development
@@ -63,7 +63,7 @@ jobs:
       - name: deploy to swarm
         run: |
           IMAGE=${{ env.image }} \
-          docker -H ${{ secrets.HOST_DEV }} \
+          docker -H ${{ secrets.HOST }} \
             --tls \
             --tlscacert ca.pem \
             --tlscert cert.pem \
