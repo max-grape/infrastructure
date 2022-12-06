@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  exim:
+    image: tianon/exim4:latest
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.name == mg1

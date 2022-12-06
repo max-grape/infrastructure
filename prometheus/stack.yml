@@ -3,18 +3,21 @@ version: '3.4'
 networks:
   nginx_default:
     external: true
-  redis_default:
+  grafana_default:
     external: true
 
+volumes:
+  prometheus:
+    name: prometheus
+
 services:
-  redis-commander:
-    image: rediscommander/redis-commander:latest
+  prometheus:
+    image: ${IMAGE}
     networks:
       - nginx_default
-      - redis_default
-    environment:
-      - REDIS_HOSTS=redis-master
-      - REDIS_PORT=6379
+      - grafana_default
+    volumes:
+      - prometheus:/prometheus
     deploy:
       replicas: 1
       update_config:

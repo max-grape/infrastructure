@@ -3,18 +3,25 @@ version: '3.4'
 networks:
   nginx_default:
     external: true
-  redis_default:
+  exim_default:
     external: true
 
+volumes:
+  grafana:
+    name: grafana
+
 services:
-  redis-commander:
-    image: rediscommander/redis-commander:latest
+  grafana:
+    image: grafana/grafana:9.3.1
     networks:
       - nginx_default
-      - redis_default
+      - exim_default
     environment:
-      - REDIS_HOSTS=redis-master
-      - REDIS_PORT=6379
+      - GF_SERVER_ROOT_URL=https://grafana.dmska.ru/
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=exim:25
+    volumes:
+      - grafana:/var/lib/grafana
     deploy:
       replicas: 1
       update_config:

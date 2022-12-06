@@ -1,0 +1,26 @@
+version: '3.4'
+
+networks:
+  openresty_default:
+    external: true
+
+volumes:
+  portainer:
+    name: portainer
+
+services:
+  portainer:
+    image: portainer/portainer-ce:2.16.2-alpine
+    networks:
+      - openresty_default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.name == mg1
