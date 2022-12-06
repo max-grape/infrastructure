@@ -1,12 +1,6 @@
 name: Deployment
 
-push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
   deployment:

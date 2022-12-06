@@ -1,12 +1,6 @@
 name: Build & deployment
 
-push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  workflow_dispatch:
+on: workflow_dispatch
 
 env:
   nginx: nginx:1.23.2-alpine
