@@ -1,10 +1,10 @@
-name: Deployment
+name: cAdvisor deployment (development)
 
 on: workflow_dispatch
 
 jobs:
   deployment:
-    name: deployment
+    name: deployment dev
     runs-on: ubuntu-latest
     environment: development
     steps:
@@ -28,4 +28,4 @@ jobs:
             --tlscert cert.pem \
             --tlskey key.pem \
             stack deploy \
-              -c redis/stack.yml redis
+              -c cadvisor/stack.yml cadvisor

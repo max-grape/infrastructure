@@ -1,4 +1,4 @@
-name: Build & deployment
+name: Nginx build & deployment (development)
 
 on: workflow_dispatch
 

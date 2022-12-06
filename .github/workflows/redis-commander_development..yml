@@ -1,4 +1,4 @@
-name: Deployment
+name: Redis commander deployment (development)
 
 on: workflow_dispatch
 
@@ -28,4 +28,4 @@ jobs:
             --tlscert cert.pem \
             --tlskey key.pem \
             stack deploy \
-              -c cadvisor/stack.yml cadvisor
+              -c redis-commander/stack.yml redis

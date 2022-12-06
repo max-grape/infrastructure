@@ -1,10 +1,10 @@
-name: Deployment
+name: Redis deployment (development)
 
 on: workflow_dispatch
 
 jobs:
   deployment:
-    name: deployment dev
+    name: deployment
     runs-on: ubuntu-latest
     environment: development
     steps:
@@ -28,4 +28,4 @@ jobs:
             --tlscert cert.pem \
             --tlskey key.pem \
             stack deploy \
-              -c redis-commander/stack.yml redis
+              -c redis/stack.yml redis
